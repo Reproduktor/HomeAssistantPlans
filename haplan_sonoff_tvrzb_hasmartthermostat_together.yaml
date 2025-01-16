@@ -78,12 +78,12 @@ triggers:
 actions:
   - action: number.set_value
     data:
-      value: {{ 100.0 - rval}}
+      value: {{ 100.0 - _pid_control_rounded}}
     target:
       entity_id: !input 'sonoff_max_valve_closing'
   - action: number.set_value
     data:
-      value: {{ rval }}
+      value: {{ _pid_control_rounded }}
     target:
       entity_id: !input 'sonoff_max_valve_opening'
 mode: single
