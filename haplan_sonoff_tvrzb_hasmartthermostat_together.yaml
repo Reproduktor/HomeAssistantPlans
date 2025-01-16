@@ -1,0 +1,89 @@
+Home Assistant plan: handle SONOFF TRVZB and HASmartThermostat 
+
+blueprint:
+  name: Sonoff TRVZB and HASmartThermostat together
+  description: Applies PID control to Sonoff TRVZB
+  domain: automation
+  input:
+  pid_thermostat:
+    selector:
+      entity:
+        multiple: false
+        filter:
+          - domain: climate
+    name: PID Thermostat
+    description: PID climate entity
+    default: climate.pid2_luckacalib
+    required: true
+  pid_thermostat_output:
+    selector:
+      entity:
+        multiple: false
+        filter:
+          - domain: input_number
+    name: PID Thermostat Output
+    description: Helper (input_number) which is assigned to PID Thermostat selected above
+    required: true
+  sonoff_thermostat:
+    selector:
+      entity:
+        multiple: false
+        filter:
+          - domain: climate
+    name: Sonoff Thermostat
+    description: The real thermostat (SONOFF TRVZB)
+    default: climate.radiator_marek_novy_termostat
+    required: true
+  sonoff_max_valve_opening:
+    name: SONOFF Max Valve Opening Position
+    selector:
+      entity:
+        filter:
+          - domain: number
+    description: Numeric entity from the real SONOFF thermostat for MaxValveOpening
+    default: number.radiator_marek_novy_stupen_otvorenia_ventilu
+    required: true
+  sonoff_max_valve_closing:
+    name: SONOFF Max Valve Closing Position
+    selector:
+      entity:
+        filter:
+          - domain: number
+    description: Numeric entity from the real SONOFF thermostat for MaxValveClosing
+    default: number.radiator_marek_novy_stupen_zatvorenia_ventilu
+    required: true
+  window_opening_switch:
+    selector:
+      entity: {}
+    name: Window opening switch
+    description: Binary sensor for detecting open windows
+    default: binary_sensor.openclose_23
+
+variables:
+  window_opening_switch: !input 'window_opening_switch'
+  sonoff_max_valve_closing: !input 'sonoff_max_valve_closing'
+  sonoff_max_valve_opening: !input 'sonoff_max_valve_opening'
+  sonoff_thermostat: !input 'sonoff_thermostat'
+  pid_thermostat_output: !input 'pid_thermostat_output'
+  pid_thermostat: !input 'pid_thermostat'
+  _pid_control_rounded:  |-
+    {% set rval = states(thermostat_value) %}
+    {% set rval = (((( (rval | float) / 5) + 0.5 ) | int )) * 5 %}
+    {{rval | float}}
+  
+triggers: 
+  trigger: state
+  entity_id: !input 'pid_thermostat_output'
+
+actions:
+  - action: number.set_value
+    data:
+      value: {{ 100.0 - rval}}
+    target:
+      entity_id: !input 'sonoff_max_valve_closing'
+  - action: number.set_value
+    data:
+      value: {{ rval }}
+    target:
+      entity_id: !input 'sonoff_max_valve_opening'
+mode: single
