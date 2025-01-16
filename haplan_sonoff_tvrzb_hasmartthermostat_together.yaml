@@ -14,7 +14,6 @@ blueprint:
       name: PID Thermostat
       description: PID climate entity
       default: climate.pid2_luckacalib
-      required: true
     pid_thermostat_output:
       selector:
         entity:
@@ -23,7 +22,6 @@ blueprint:
             - domain: input_number
       name: PID Thermostat Output
       description: Helper (input_number) which is assigned to PID Thermostat selected above
-      required: true
     sonoff_thermostat:
       selector:
         entity:
@@ -33,7 +31,6 @@ blueprint:
       name: Sonoff Thermostat
       description: The real thermostat (SONOFF TRVZB)
       default: climate.radiator_marek_novy_termostat
-      required: true
     sonoff_max_valve_opening:
       name: SONOFF Max Valve Opening Position
       selector:
@@ -42,7 +39,6 @@ blueprint:
             - domain: number
       description: Numeric entity from the real SONOFF thermostat for MaxValveOpening
       default: number.radiator_marek_novy_stupen_otvorenia_ventilu
-      required: true
     sonoff_max_valve_closing:
       name: SONOFF Max Valve Closing Position
       selector:
@@ -51,7 +47,6 @@ blueprint:
             - domain: number
       description: Numeric entity from the real SONOFF thermostat for MaxValveClosing
       default: number.radiator_marek_novy_stupen_zatvorenia_ventilu
-      required: true
     window_opening_switch:
       selector:
         entity: {}
