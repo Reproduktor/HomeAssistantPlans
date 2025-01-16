@@ -59,24 +59,26 @@ variables:
   sonoff_thermostat: !input 'sonoff_thermostat'
   pid_thermostat_output: !input 'pid_thermostat_output'
   pid_thermostat: !input 'pid_thermostat'
-  _pid_control_rounded:  |-
-    {% set rval = states(thermostat_value) %}
-    {% set rval = (((( (rval | float) / 5) + 0.5 ) | int )) * 5 %}
-    {{rval | float}}
-  
+
 triggers: 
   trigger: state
   entity_id: !input 'pid_thermostat_output'
 
 actions:
-  - service: number.set_value
-    data_template:
-      value: "{{ 100.0 - _pid_control_rounded }}"
+  - data_template:
+      value: |-
+        {% set rval = states(pid_thermostat_output) %}
+        {% set rval = (((( (rval | float) / 5) + 0.5 ) | int )) * 5 %}
+        {{100 - rval | float}}
     target:
-      entity_id: !input 'sonoff_max_valve_closing'
-  - service: number.set_value
-    data_template:
-      value: "{{ _pid_control_rounded }}"
+      entity_id: number.radiator_marek_novy_stupen_zatvorenia_ventilu
+    action: number.set_value
+  - data_template:
+      value: |-
+        {% set rval = states(pid_thermostat_output) %}
+        {% set rval = (((( (rval | float) / 5) + 0.5 ) | int )) * 5 %}
+        {{rval | float}}
     target:
-      entity_id: !input 'sonoff_max_valve_opening'
+      entity_id: number.radiator_marek_novy_stupen_otvorenia_ventilu
+    action: number.set_value
 mode: single
