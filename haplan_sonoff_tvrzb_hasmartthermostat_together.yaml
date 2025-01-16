@@ -1,5 +1,3 @@
-Home Assistant plan: handle SONOFF TRVZB and HASmartThermostat 
-
 blueprint:
   name: Sonoff TRVZB and HASmartThermostat together
   description: Applies PID control to Sonoff TRVZB
