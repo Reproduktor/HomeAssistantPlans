@@ -76,13 +76,13 @@ triggers:
   entity_id: !input 'pid_thermostat_output'
 
 actions:
-  - action: number.set_value
-    data:
-      value: "{{ 100.0 - _pid_control_rounded}}"
+  - service: number.set_value
+    data_template:
+      value: "{{ 100.0 - _pid_control_rounded }}"
     target:
       entity_id: !input 'sonoff_max_valve_closing'
-  - action: number.set_value
-    data:
+  - service: number.set_value
+    data_template:
       value: "{{ _pid_control_rounded }}"
     target:
       entity_id: !input 'sonoff_max_valve_opening'
