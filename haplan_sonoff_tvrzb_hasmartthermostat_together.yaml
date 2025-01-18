@@ -84,7 +84,7 @@ actions:
         {% set rval = (((( (rval | float) / pid_rounding) + 0.5 ) | int )) * pid_rounding %}
         {{100 - rval | float}}
     target:
-      entity_id: number.radiator_marek_novy_stupen_zatvorenia_ventilu
+      entity_id: !input 'sonoff_max_valve_closing'
     action: number.set_value
   - data_template:
       value: |-
@@ -92,6 +92,6 @@ actions:
         {% set rval = (((( (rval | float) / pid_rounding) + 0.5 ) | int )) * pid_rounding %}
         {{rval | float}}
     target:
-      entity_id: number.radiator_marek_novy_stupen_otvorenia_ventilu
+      entity_id: !input 'sonoff_max_valve_opening'
     action: number.set_value
 mode: single
