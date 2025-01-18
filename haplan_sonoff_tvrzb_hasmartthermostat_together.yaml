@@ -45,6 +45,17 @@ blueprint:
             - domain: number
       description: Numeric entity from the real SONOFF thermostat for MaxValveClosing
       default: number.radiator_marek_novy_stupen_zatvorenia_ventilu
+
+    pid_rounding:
+      selector:
+        number:
+          min: 0.1
+          max: 10
+          unit_of_measurement: %
+      name: Valve precision
+      description: Round the PID output to the multiples of this given value
+      default: 1
+
     window_opening_switch:
       selector:
         entity: {}
@@ -59,6 +70,7 @@ variables:
   sonoff_thermostat: !input 'sonoff_thermostat'
   pid_thermostat_output: !input 'pid_thermostat_output'
   pid_thermostat: !input 'pid_thermostat'
+  pid_rounding: !input 'pid_rounding'
 
 triggers: 
   trigger: state
@@ -68,7 +80,7 @@ actions:
   - data_template:
       value: |-
         {% set rval = states(pid_thermostat_output) %}
-        {% set rval = (((( (rval | float) / 5) + 0.5 ) | int )) * 5 %}
+        {% set rval = (((( (rval | float) / pid_rounding) + 0.5 ) | int )) * pid_rounding %}
         {{100 - rval | float}}
     target:
       entity_id: number.radiator_marek_novy_stupen_zatvorenia_ventilu
@@ -76,7 +88,7 @@ actions:
   - data_template:
       value: |-
         {% set rval = states(pid_thermostat_output) %}
-        {% set rval = (((( (rval | float) / 5) + 0.5 ) | int )) * 5 %}
+        {% set rval = (((( (rval | float) / pid_rounding) + 0.5 ) | int )) * pid_rounding %}
         {{rval | float}}
     target:
       entity_id: number.radiator_marek_novy_stupen_otvorenia_ventilu
