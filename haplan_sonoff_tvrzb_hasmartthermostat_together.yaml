@@ -20,6 +20,7 @@ blueprint:
             - domain: input_number
       name: PID Thermostat Output
       description: Helper (input_number) which is assigned to PID Thermostat selected above
+      default: input_number.marek_radiator_pid
     sonoff_thermostat:
       selector:
         entity:
