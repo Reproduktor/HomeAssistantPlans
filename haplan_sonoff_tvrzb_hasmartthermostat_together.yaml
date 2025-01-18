@@ -52,7 +52,7 @@ blueprint:
         number:
           min: 0.1
           max: 10
-          unit_of_measurement: %
+          unit_of_measurement: "%"
       name: Valve precision
       description: Round the PID output to the multiples of this given value
       default: 1
